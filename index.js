@@ -77,9 +77,9 @@ const addEvents = async (title, imgurl, story, links) => {
   await client.db(DB_ID).collection("yrcevents").insertOne(dataModel);
 };
 
-app.listen(process.env.PORT || 3001, (err) => {
+app.listen(process.env.PORT || 3000, (err) => {
   if (!err) {
-    console.log("server running on port 3001");
+    console.log("server running on port 3000");
   }
 });
 

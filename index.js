@@ -7,6 +7,7 @@ const app = express();
 
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
+app.use(cors());
 
 const driverurl =
   "mongodb+srv://solai_client:" +
@@ -22,6 +23,15 @@ const client = new MongoClient(driverurl, {
 const main = async () => {
   try {
     await client.connect();
+    // default end point
+      app.get("/", (req, res) => {
+           res.header("Access-Control-Allow-Origin", "*");
+      res.header(
+        "Access-Control-Allow-Headers",
+        "Origin, X-Requested-With, Content-Type, Accept"
+      );
+        res.send("YRC WEB API , all events are found in /events");
+      });
     // get all events
     app.get("/events", (req, res) => {
       res.header("Access-Control-Allow-Origin", "*");
@@ -44,10 +54,7 @@ const main = async () => {
         req.body.story,
         req.body.links
       ).then((succ) => res.sendStatus(200).send("ok"));
-      // default end point
-      app.use("/", (req, res) => {
-        res.send("YRC WEB API , all events are found in /events");
-      });
+      
     });
   } catch (error) {
     console.dir(error);

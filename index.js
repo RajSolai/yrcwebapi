@@ -24,14 +24,14 @@ const main = async () => {
   try {
     await client.connect();
     // default end point
-      app.get("/", (req, res) => {
-           res.header("Access-Control-Allow-Origin", "*");
+    app.get("/", (req, res) => {
+      res.header("Access-Control-Allow-Origin", "*");
       res.header(
         "Access-Control-Allow-Headers",
         "Origin, X-Requested-With, Content-Type, Accept"
       );
-        res.send("YRC WEB API , all events are found in /events");
-      });
+      res.send("YRC WEB API , all events are found in /events");
+    });
     // get all events
     app.get("/events", (req, res) => {
       res.header("Access-Control-Allow-Origin", "*");
@@ -49,12 +49,13 @@ const main = async () => {
         "Origin, X-Requested-With, Content-Type, Accept"
       );
       addEvents(
+        req.body.uploaddate,
         req.body.title,
         req.body.imgurl,
+        req.body.imgtag,
         req.body.story,
         req.body.links
       ).then((succ) => res.sendStatus(200).send("ok"));
-      
     });
   } catch (error) {
     console.dir(error);
@@ -74,10 +75,12 @@ const getEvents = async () => {
   return events;
 };
 
-const addEvents = async (title, imgurl, story, links) => {
+const addEvents = async (uploaddate, title, imgurl, imgtag, story, links) => {
   let dataModel = {
+    uploaddate: uploaddate,
     title: title,
     imgurl: imgurl,
+    imgtag: imgtag,
     story: story,
     links: links,
   };

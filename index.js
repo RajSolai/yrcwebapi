@@ -53,6 +53,7 @@ const main = async () => {
         req.body.title,
         req.body.imgurl,
         req.body.imgtag,
+	req.body.desc,
         req.body.story,
         req.body.links
       ).then((succ) => res.sendStatus(200).send("ok"));
@@ -82,6 +83,7 @@ const addEvents = async (uploaddate, title, imgurl, imgtag, story, links) => {
     imgurl: imgurl,
     imgtag: imgtag,
     story: story,
+    desc: desc,
     links: links,
   };
   await client.db(DB_ID).collection("yrcevents").insertOne(dataModel);

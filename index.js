@@ -87,7 +87,7 @@ const main = async () => {
       addVolunteer(
         req.body.avatarurl,
         req.body.name,
-        req.body.contact
+        req.body.contact,
         req.body.dept,
         req.body.year
       )

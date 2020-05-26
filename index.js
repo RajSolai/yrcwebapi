@@ -30,7 +30,9 @@ const main = async () => {
         "Access-Control-Allow-Headers",
         "Origin, X-Requested-With, Content-Type, Accept"
       );
-      res.send("YRC WEB API , all events are found in /events");
+      res.send(
+        "YRC WEB API , all events are found in /events , limited events are in /recents , all volunteers in /volunteers , request for blood in /bldreq , all donors in /bldonors"
+      );
     });
     // get all events
     app.get("/events", (req, res) => {
@@ -76,6 +78,34 @@ const main = async () => {
       )
         .then((succ) => res.sendStatus(200).send("ok"))
         .catch((err) => console.dir(err));
+    });
+    // add a blood donor
+    app.post("/bldonors", (req, res) => {
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header(
+        "Access-Control-Allow-Headers",
+        "Origin, X-Requested-With, Content-Type, Accept"
+      );
+      addDonor(
+        req.body.name,
+        req.body.age,
+        req.body.work,
+        req.body.bldgrp,
+        req.body.pdh,
+        req.body.weight,
+        req.body.medical_history
+      )
+        .then((succ) => res.sendStatus(200).send("ok"))
+        .catch((err) => console.dir(err));
+    });
+    // get all donors
+    app.get("/bldonors", (req, res) => {
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header(
+        "Access-Control-Allow-Headers",
+        "Origin, X-Requested-With, Content-Type, Accept"
+      );
+      getDonors().then((data) => res.json(data));
     });
     // post an volunteers
     app.post("/volunteers", (req, res) => {
@@ -129,6 +159,19 @@ const getEvents = async () => {
   return events;
 };
 
+const getDonors = async () => {
+  let donors;
+  await client
+    .db(DB_ID)
+    .collection("blood_donors")
+    .find({})
+    .toArray()
+    .then((data) => {
+      donors = data;
+    });
+  return donors;
+};
+
 const getEvents_limited = async (limit) => {
   let events;
   await client
@@ -177,23 +220,51 @@ const addEvents = async (
   await client.db(DB_ID).collection("yrcevents").insertOne(dataModel);
 };
 
-const addVolunteer = async (avatarurl,name,contact, dept, year) => {
+const addVolunteer = async (avatarurl, name, contact, dept, year) => {
   let dataModel = {
     avatarurl: avatarurl,
     name: name,
-    contact:contact,
+    contact: contact,
     dept: dept,
     year: year,
   };
   await client.db(DB_ID).collection("yrc_vols").insertOne(dataModel);
 };
 
-const addBldrequest = async (name, contact, email,bldgrp, hospitalname, rtop) => {
+const addDonor = async (
+  name,
+  age,
+  work,
+  blood_group,
+  pre_donation_history,
+  weight,
+  medical_history
+) => {
+  let dataModel = {
+    name: name,
+    age: age,
+    work: work,
+    bldgrp: blood_group,
+    pdh: pre_donation_history,
+    weight: weight,
+    medical_history: medical_history,
+  };
+  await client.db(DB_ID).collection("blood_donors").insertOne(dataModel);
+};
+
+const addBldrequest = async (
+  name,
+  contact,
+  email,
+  bldgrp,
+  hospitalname,
+  rtop
+) => {
   let dataModel = {
     name: name,
     contact: contact,
     email: email,
-    bldgrp:bldgrp,
+    bldgrp: bldgrp,
     hospitalname: hospitalname,
     relationtopatient: rtop,
   };

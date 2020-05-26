@@ -87,6 +87,7 @@ const main = async () => {
       addVolunteer(
         req.body.avatarurl,
         req.body.name,
+        req.body.contact
         req.body.dept,
         req.body.year
       )
@@ -176,10 +177,11 @@ const addEvents = async (
   await client.db(DB_ID).collection("yrcevents").insertOne(dataModel);
 };
 
-const addVolunteer = async (avatarurl, name, dept, year) => {
+const addVolunteer = async (avatarurl,name,contact, dept, year) => {
   let dataModel = {
     avatarurl: avatarurl,
     name: name,
+    contact:contact,
     dept: dept,
     year: year,
   };

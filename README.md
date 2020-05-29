@@ -1,1 +1,1 @@
-yrcwebapi rest arcitecture
+yrcwebapi rest arcitecture for SRM VEC YRC

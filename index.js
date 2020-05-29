@@ -79,6 +79,15 @@ const main = async () => {
         .then((succ) => res.sendStatus(200).send("ok"))
         .catch((err) => console.dir(err));
     });
+    // get all bld request
+    app.get("/bldreq", (req, res) => {
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header(
+        "Access-Control-Allow-Headers",
+        "Origin, X-Requested-With, Content-Type, Accept"
+      );
+      getBldreq().then((data) => res.json(data));
+    });
     // add a blood donor
     app.post("/bldonors", (req, res) => {
       res.header("Access-Control-Allow-Origin", "*");
@@ -170,6 +179,19 @@ const getDonors = async () => {
       donors = data;
     });
   return donors;
+};
+
+const getBldreq = async () => {
+  let bldreq;
+  await client
+    .db(DB_ID)
+    .collection("blood_req")
+    .find({})
+    .toArray()
+    .then((data) => {
+      bldreq = data;
+    });
+  return bldreq;
 };
 
 const getEvents_limited = async (limit) => {
